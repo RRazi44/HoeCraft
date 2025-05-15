@@ -1,0 +1,8 @@
+name: Houe
+version: 1.0
+author: Razi
+main: fr.razi.houe.Main
+commands:
+  givehoue:
+    description: Cette commande permet de donner une recolteuse
+    permission: givehoue.use
