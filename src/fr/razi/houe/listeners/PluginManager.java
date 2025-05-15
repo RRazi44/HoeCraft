@@ -2,6 +2,8 @@ package fr.razi.houe.listeners;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.CropState;
 import org.bukkit.Location;
@@ -38,7 +40,7 @@ public class PluginManager implements Listener {
 	public void onBreak(BlockBreakEvent event) {
 		
 	    Player player = event.getPlayer();	    
-	    if (player == null) return;	    
+	    if (player == null) return;	 
 	    
 	    Block brokeblock = event.getBlock();	    
 	    Location blockLoc = brokeblock.getLocation();	    
@@ -48,6 +50,7 @@ public class PluginManager implements Listener {
 	    if(it == null || !isRecolteuse(it)) return;
 	    
 	    boolean useDura = false;
+	    boolean eventCancelled = false;
 
 
 	    for(Block block : blocksDiametre) {
@@ -57,7 +60,7 @@ public class PluginManager implements Listener {
 		    Material type = block.getType();
 		    
 		    if (type == Material.NETHER_WARTS && data instanceof NetherWarts) {
-		    	event.setCancelled(true);
+		    	eventCancelled = true;
 		        NetherWarts nw = (NetherWarts) data;
 		        if (nw.getState() == NetherWartsState.RIPE) {
 		            block.setType(Material.NETHER_WARTS);
@@ -68,7 +71,7 @@ public class PluginManager implements Listener {
 
 		    if (data instanceof Crops) {
 		        Crops crop = (Crops) data;
-		        event.setCancelled(true);
+		        eventCancelled = true;
 		        if (crop.getState() == CropState.RIPE) {
 		        	block.setType(Material.CROPS);
 		            player.getInventory().addItem(new ItemStack(Material.WHEAT));  
@@ -78,7 +81,7 @@ public class PluginManager implements Listener {
 		    } 
 		    
 		    if (type == Material.CARROT || type == Material.POTATO) {
-		    	event.setCancelled(true);
+		    	eventCancelled = true;
 				byte age = block.getData();
 		        if(age == 7) {
 		        	if (type == Material.CARROT) {
@@ -92,12 +95,14 @@ public class PluginManager implements Listener {
 		            }
 		        }
 		    }
-				    
-		    
-		    if(useDura) {	
-		    	decDura(it, player);
-		    }
 	    }  
+	    
+	    event.setCancelled(eventCancelled);
+	    
+	    if(useDura) {	
+	    	decDura(it, player);
+	    }
+	    
 	}
     
     
@@ -129,35 +134,39 @@ public class PluginManager implements Listener {
  
     
     public void decDura(ItemStack it, Player player) {
-    	
-    	ItemMeta itM = it.getItemMeta();
-    	List<String> lore = itM.getLore();
-    	String duraLine = lore.get(1);
-    	String dura = "";
+        if (it == null || !it.hasItemMeta()) return;
+        
+        ItemMeta itM = it.getItemMeta();
+        if (!itM.hasLore()) return;
 
-    	for(int i = 15; i < duraLine.length(); i++) {
-    		dura = dura + duraLine.charAt(i);
-    	}
-    	
-    	int durability = Integer.parseInt(dura);
-    	
-    	if(durability > 0) {
-    		lore.set(1, "§8Durabilité : " + (durability-1));
-    		itM.setLore(lore);
-    		it.setItemMeta(itM);
-    	} 
-    	
-    	else {
-    		player.setItemInHand(new ItemStack(Material.AIR));
-	    	player.playSound(player.getLocation(), Sound.ITEM_BREAK, 5, 5);
-    	}
+        List<String> lore = itM.getLore();
+        if (lore.size() < 2) return;
+
+        String duraLine = lore.get(1);
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(duraLine);
+
+        if (!matcher.find()) return;
+
+        int durability = Integer.parseInt(matcher.group());
+
+        if (durability > 0) {
+            int newDura = durability - 1;
+            lore.set(1, "§8Durabilité : " + newDura);
+            itM.setLore(lore);
+            it.setItemMeta(itM);
+        } 
+        
+        else {
+            player.setItemInHand(new ItemStack(Material.AIR));
+            player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1f, 1f);
+        }
+        
     }
     
     
     public ArrayList<Block> getBlockAutour(Location blockCible){
-    	
     	ArrayList<Block> blocksDiametre = new ArrayList<>();
-    	
     	for(int i = -1; i<=1;i++) {
 	    	for(int j = -1; j<=1;j++) {
 	    		
@@ -167,9 +176,7 @@ public class PluginManager implements Listener {
 		    	
 		    	Block block = new Location(blockCible.getWorld(),bx + i, by, bz + j).getBlock();
 		    	
-		    	if(block.getType() == Material.AIR || block != null) {
-		    		blocksDiametre.add(block);
-		    	}
+		    	blocksDiametre.add(block);
 		    }
 	    }
     	
