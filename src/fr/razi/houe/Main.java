@@ -1,7 +1,6 @@
 package fr.razi.houe;
 
 import org.bukkit.plugin.java.JavaPlugin;
-
 import fr.razi.houe.commands.commandGiveHoe;
 import fr.razi.houe.listeners.PluginManager;
 
@@ -31,4 +30,5 @@ public class Main extends JavaPlugin {
 	public void onDisable() {
 	
 	}
+	
 }

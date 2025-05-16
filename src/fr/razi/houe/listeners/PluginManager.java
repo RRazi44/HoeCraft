@@ -1,15 +1,10 @@
 package fr.razi.houe.listeners;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.bukkit.CropState;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NetherWartsState;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -20,12 +15,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Crops;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.NetherWarts;
 
 import fr.razi.houe.Main;
+import fr.razi.houe.utils.HoueManager;
 
 public class PluginManager implements Listener {
 
@@ -100,7 +95,7 @@ public class PluginManager implements Listener {
 	    event.setCancelled(eventCancelled);
 	    
 	    if(useDura) {	
-	    	decDura(it, player);
+	    	HoueManager.incLoreCompteur(it, player);
 	    }
 	    
 	}
@@ -130,38 +125,6 @@ public class PluginManager implements Listener {
 				block.setType(Material.SOIL);
 			}			
 		}
-    }
- 
-    
-    public void decDura(ItemStack it, Player player) {
-        if (it == null || !it.hasItemMeta()) return;
-        
-        ItemMeta itM = it.getItemMeta();
-        if (!itM.hasLore()) return;
-
-        List<String> lore = itM.getLore();
-        if (lore.size() < 2) return;
-
-        String duraLine = lore.get(1);
-        Pattern pattern = Pattern.compile("\\d+");
-        Matcher matcher = pattern.matcher(duraLine);
-
-        if (!matcher.find()) return;
-
-        int durability = Integer.parseInt(matcher.group());
-
-        if (durability > 0) {
-            int newDura = durability - 1;
-            lore.set(1, "§8Durabilité : " + newDura);
-            itM.setLore(lore);
-            it.setItemMeta(itM);
-        } 
-        
-        else {
-            player.setItemInHand(new ItemStack(Material.AIR));
-            player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1f, 1f);
-        }
-        
     }
     
     

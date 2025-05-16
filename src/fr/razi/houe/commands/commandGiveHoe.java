@@ -8,9 +8,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.razi.houe.Main;
+import fr.razi.houe.utils.HoueManager;
 
 public class commandGiveHoe implements CommandExecutor {
 
@@ -41,7 +41,7 @@ public class commandGiveHoe implements CommandExecutor {
 						lore.add("§8Durabilité : " + maxDurability);
 						lore.add("§8--------------------");
 						
-						houe = getHoue(Material.GOLD_HOE, nomItem, lore);
+						houe = HoueManager.getHoue(Material.GOLD_HOE, nomItem, lore);
 	
 					}
 					
@@ -55,7 +55,7 @@ public class commandGiveHoe implements CommandExecutor {
 						lore.add("§8Experience: [0/" + expToLvlOne + "]");
 						lore.add("§8--------------------");
 						
-						houe = getHoue(Material.WOOD_HOE, nomItem, lore);
+						houe = HoueManager.getHoue(Material.WOOD_HOE, nomItem, lore);
 						
 					}
 					
@@ -72,19 +72,6 @@ public class commandGiveHoe implements CommandExecutor {
 			}
 		
 		return false;
-	}
-	
-	private ItemStack getHoue(Material mat, String nomItem, ArrayList<String> lore) {
-
-		ItemStack houe = new ItemStack(mat);
-		ItemMeta houeM = houe.getItemMeta();
-		
-		houeM.setDisplayName(nomItem);
-		houeM.setLore(lore);
-		houe.setItemMeta(houeM);
-		
-		return houe;
-		
 	}
 	
 }
