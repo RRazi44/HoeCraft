@@ -13,14 +13,6 @@ public class Main extends JavaPlugin {
 		getCommand("givehoue").setExecutor(new commandGiveHoe(this));
 		
 		if(getConfig().getString("NomDuraHoue") == null) {
-			/*
-			getConfig().set("NomExpHoue", "§b§lMawaks Récolteuse");
-			getConfig().set("ExpRequisPourLvl2", 200000);
-			getConfig().set("ExpRequisPourLvl3", 5000000);
-			getConfig().set("ExpRequisPourLvl4", 20000000);
-			getConfig().set("ExpRequisPourLvl5", 150000000);
-			*/
-			
 			getConfig().set("NomDuraHoue", "§b§lRécolteuse de plantation");
 			getConfig().set("durability", 2500);
 			
