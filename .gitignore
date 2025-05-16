@@ -1,0 +1,26 @@
+# Java
+*.class
+*.log
+
+# Eclipse / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+target/
+bin/
+
+# MacOS
+.DS_Store
+
+# Gradle / Maven
+.gradle/
+build/
+.settings/
+
+# OS junk
+Thumbs.db
+
+.project
+.classpath

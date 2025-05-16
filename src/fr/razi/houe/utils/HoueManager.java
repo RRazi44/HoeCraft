@@ -13,6 +13,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class HoueManager {
 	
+	public static boolean isRecolteuse(ItemStack it, String recolteuseEXPName) {
+    	if(it == null || !it.hasItemMeta()) return false;
+    	if(!it.getItemMeta().hasDisplayName()) return false;
+    	return it.getItemMeta().getDisplayName().equalsIgnoreCase(recolteuseEXPName);
+    }
 
 	public static ItemStack getHoue(Material mat, String nomItem, ArrayList<String> lore) {
 
@@ -24,7 +29,6 @@ public class HoueManager {
 		houe.setItemMeta(houeM);
 		
 		return houe;
-		
 	}
 	
 	public static void incLoreCompteur(ItemStack it, Player player) {
