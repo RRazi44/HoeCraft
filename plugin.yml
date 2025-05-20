@@ -1,8 +1,8 @@
-name: Houe
-version: 1.0
+name: HoeCraft
+version: 1.1
 author: Razi
 main: fr.razi.houe.Main
 commands:
   givehoue:
-    description: Cette commande permet de donner une recolteuse
+    description: This command give you a hoe that harve and replant in a 5 block radius
     permission: givehoue.use
